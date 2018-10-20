@@ -1,0 +1,661 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{}
+    \pretitle{\vspace{\droptitle}}
+  \posttitle{}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+
+\section{Prosper Loan Data Exploratory Data Analysis by Véber
+István}\label{prosper-loan-data-exploratory-data-analysis-by-veber-istvan}
+
+This analysis explores the prosper dataset. According to there website:
+``Through Prosper, people can invest in each other in a way that is
+financially and socially rewarding. Borrowers apply online for a
+fixed-rate, fixed-term loan between \$2,000 and \$40,000. Individuals
+and institutions can invest in loans and earn attractive returns.
+Prosper handles all loan servicing on behalf of the matched borrowers
+and investors.''
+
+In the original dataset there are 81 variables, during the analysis the
+following variables were retained: source:
+\url{https://rstudio-pubs-static.s3.amazonaws.com/86324_ab1e2e2fa210452f80a1c6a1476d7a2a.html}
+
+Term: The length of the loan expressed in months. LoanStatus: The
+current status of the loan: Cancelled, Chargedoff, Completed, Current,
+Defaulted, FinalPaymentInProgress, PastDue. BorrowerRate: The Borrower's
+interest rate for this loan. EstimatedReturn: The estimated return
+assigned to the listing at the time it was created. ProsperRating: The
+Prosper Rating assigned at the time the listing was created: 0 - N/A, 1
+- HR, 2 - E, 3 - D, 4 - C, 5 - B, 6 - A, 7 - AA. ProsperScore: A custom
+risk score built using historical Prosper data. The score ranges from
+1-10, with 10 being the best, or lowest risk score. ListingCategory: The
+category of the listing that the borrower selected when posting their
+listing. BorrowerState: The two letter abbreviation of the state of the
+address. EmploymentStatus: The employment status of the borrower.
+EmploymentStatusDuration: The length in months of the employment status.
+IsBorrowerHomeowner Borrower is homeowner or not. DebtToIncomeRatio: The
+debt to income ratio of the borrower at the time the credit profile was
+pulled. This value is Null if the debt to income ratio is not available.
+This value is capped at 10.01. IncomeRange: The income range of the
+borrower. IncomeVerifiable: The borrower indicated they have the
+required documentation to support their income. StatedMonthlyIncome: The
+monthly income the borrower stated. LoanOriginalAmount: The origination
+amount of the loan. LoanOriginationDate: The date the loan was
+originated. MonthlyLoanPayment: The scheduled monthly loan payment.
+
+\begin{verbatim}
+## [1] 113937     20
+\end{verbatim}
+
+\begin{verbatim}
+## 'data.frame':    113937 obs. of  20 variables:
+##  $ Term                    : Factor w/ 3 levels "12","36","60": 2 2 2 2 2 3 2 2 2 2 ...
+##  $ LoanStatus              : Factor w/ 12 levels "Cancelled","Chargedoff",..: 3 4 3 4 4 4 4 4 4 4 ...
+##  $ BorrowerRate            : num  0.158 0.092 0.275 0.0974 0.2085 ...
+##  $ EstimatedReturn         : num  NA 0.0547 NA 0.06 0.0907 ...
+##  $ ProsperRating           : Ord.factor w/ 8 levels "NA"<"1"<"2"<"3"<..: NA 7 NA 7 4 6 3 5 8 8 ...
+##  $ ProsperScore            : Ord.factor w/ 12 levels "NA"<"1"<"2"<"3"<..: NA 8 NA 10 5 11 3 5 10 12 ...
+##  $ ListingCategory         : Factor w/ 21 levels "Not Available",..: 1 3 1 17 3 2 2 3 8 8 ...
+##  $ BorrowerState           : Factor w/ 52 levels "","AK","AL","AR",..: 7 7 12 12 25 34 18 6 16 16 ...
+##  $ EmploymentStatus        : Factor w/ 9 levels "","Employed",..: 9 2 4 2 2 2 2 2 2 2 ...
+##  $ EmploymentStatusDuration: int  2 44 NA 113 44 82 172 103 269 269 ...
+##  $ IsBorrowerHomeowner     : Factor w/ 2 levels "False","True": 2 1 1 2 2 2 1 1 2 2 ...
+##  $ DebtToIncomeRatio       : num  0.17 0.18 0.06 0.15 0.26 0.36 0.27 0.24 0.25 0.25 ...
+##  $ IncomeRange             : Factor w/ 8 levels "$0","$1-24,999",..: 4 5 7 4 3 3 4 4 4 4 ...
+##  $ IncomeVerifiable        : Factor w/ 2 levels "False","True": 2 2 2 2 2 2 2 2 2 2 ...
+##  $ StatedMonthlyIncome     : num  3083 6125 2083 2875 9583 ...
+##  $ LoanOriginalAmount      : int  9425 10000 3001 10000 15000 15000 3000 10000 10000 10000 ...
+##  $ LoanOriginationDate     : Date, format: "2007-09-12" "2014-03-03" ...
+##  $ ListingCreationDate     : Date, format: "2007-08-26" "2014-02-27" ...
+##  $ LoanOriginationQuarter  : Factor w/ 33 levels "Q1 2006","Q1 2007",..: 18 8 2 32 24 33 16 16 33 33 ...
+##  $ MonthlyLoanPayment      : num  330 319 123 321 564 ...
+\end{verbatim}
+
+19 variables are retained for exploration.
+
+\begin{verbatim}
+##                     Term               LoanStatus             BorrowerRate 
+##                        0                        0                        0 
+##          EstimatedReturn            ProsperRating             ProsperScore 
+##                    29084                    29084                    29084 
+##          ListingCategory            BorrowerState         EmploymentStatus 
+##                        0                        0                        0 
+## EmploymentStatusDuration      IsBorrowerHomeowner        DebtToIncomeRatio 
+##                     7625                        0                     8554 
+##              IncomeRange         IncomeVerifiable      StatedMonthlyIncome 
+##                        0                        0                        0 
+##       LoanOriginalAmount      LoanOriginationDate      ListingCreationDate 
+##                        0                        0                        0 
+##   LoanOriginationQuarter       MonthlyLoanPayment 
+##                        0                        0
+\end{verbatim}
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+Some variables have no data prior 2009-07-13, these dates were dropped.
+
+\begin{verbatim}
+##                     Term               LoanStatus             BorrowerRate 
+##                        0                        0                        0 
+##          EstimatedReturn            ProsperRating             ProsperScore 
+##                        0                        0                        0 
+##          ListingCategory            BorrowerState         EmploymentStatus 
+##                        0                        0                        0 
+## EmploymentStatusDuration      IsBorrowerHomeowner        DebtToIncomeRatio 
+##                       19                        0                     7296 
+##              IncomeRange         IncomeVerifiable      StatedMonthlyIncome 
+##                        0                        0                        0 
+##       LoanOriginalAmount      LoanOriginationDate      ListingCreationDate 
+##                        0                        0                        0 
+##   LoanOriginationQuarter       MonthlyLoanPayment 
+##                        0                        0
+\end{verbatim}
+
+After dropping early dates only the DebtToIncomeRatio variable has in
+our dataset a large number of nan rows (7296). This is because the isn't
+verifiable, and this alone can be an interesting group to examine, so
+these rows are retained.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(df}\OperatorTok{$}\NormalTok{LoanStatu)}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Defaulted'}\NormalTok{] <-}\StringTok{ 'Failed'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Chargedoff'}\NormalTok{] <-}\StringTok{ 'Failed'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Cancelled'}\NormalTok{] <-}\StringTok{ 'Failed'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'FinalPaymentInProgress'}\NormalTok{] <-}\StringTok{ 'Completed'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Past Due (>120 days)'}\NormalTok{] <-}\StringTok{ 'Past'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Past Due (1-15 days)'}\NormalTok{] <-}\StringTok{ 'Past'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Past Due (16-30 days)'}\NormalTok{] <-}\StringTok{ 'Past'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Past Due (31-60 days)'}\NormalTok{] <-}\StringTok{ 'Past'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Past Due (61-90 days)'}\NormalTok{] <-}\StringTok{ 'Past'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus[df}\OperatorTok{$}\NormalTok{LoanStatus }\OperatorTok{==}\StringTok{ 'Past Due (91-120 days)'}\NormalTok{] <-}\StringTok{ 'Past'}
+\NormalTok{df}\OperatorTok{$}\NormalTok{LoanStatus <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(df}\OperatorTok{$}\NormalTok{LoanStatus)}
+\KeywordTok{levels}\NormalTok{(df}\OperatorTok{$}\NormalTok{LoanStatus)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Completed" "Current"   "Failed"    "Past"
+\end{verbatim}
+
+The LoanStatus variable has too many levels to explore, they are
+regrouped to the following 4 groups: ``Completed'', ``Current'',
+``Failed'', ``Past''
+
+\section{Univariate Plots Section}\label{univariate-plots-section}
+
+\includegraphics{projecttemplate_files/figure-latex/Univariate_Plots-1.pdf}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1000    4000    7500    9083   13500   35000
+\end{verbatim}
+
+According to the site, the loan range is between \$2,000 and \$40,000,
+but in the dataset the minimum amount is \$1,000. When the dataset was
+made the loan range was different.
+
+A large proportion of the loans are under \$15,000. Some round numbers
+are very popular: \$400, \$10,000, \$15,000, the median loan is \$7,500.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{verbatim}
+##       Not Available  Debt Consolidation    Home Improvement 
+##                  20               53180                6801 
+##            Business       Personal Loan         Student Use 
+##                5298                   0                 274 
+##                Auto               Other       Baby&Adoption 
+##                2237                9218                 199 
+##                Boat Cosmetic Procedures     Engagement Ring 
+##                  85                  91                 217 
+##         Green Loans  Household Expenses     Large Purchases 
+##                  59                1996                 876 
+##      Medical/Dental          Motorcycle                  RV 
+##                1522                 304                  52 
+##               Taxes            Vacation       Wedding Loans 
+##                 885                 768                 771
+\end{verbatim}
+
+The most popular choice is debt consolidation by far, other popular
+reasons are home improvement, business, and auto.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{verbatim}
+##         Min.      1st Qu.       Median         Mean      3rd Qu. 
+## "2009-07-20" "2012-02-23" "2013-04-09" "2012-11-15" "2013-11-05" 
+##         Max. 
+## "2014-03-12"
+\end{verbatim}
+
+During the period the number of new loans is growing, but at the and of
+2012 was a fallback, and only in the middle of 2013 reached the number
+of new loans the earlier record. In the chart, the grey columns are the
+number of new loans in a 30 days period. The blue columns are the new
+loans per week, and the orange the loans per day.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+At the time of the last date in the dataset almost 70\% of the loans
+were in the ``Current'' group, this signs the rapid growth of the loan
+numbers. If we focus on the completed or failed loans we can see that a
+quarter of the loans failed (defaulted or charged-off).
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.0400  0.1359  0.1875  0.1960  0.2574  0.3600
+\end{verbatim}
+
+\begin{verbatim}
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -0.18270  0.07408  0.09170  0.09607  0.11660  0.28370
+\end{verbatim}
+
+EstimatedReturn is the difference between the Estimated Effective Yield
+and the Estimated Loss Rate. EstimatedReturn has a nice bell shaped
+distribution, while BorrowerRate is a bit bimodal. The range of
+BorrowerRate is larger. EstimatedReturn some cases can be negative.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+Prosper is really popular in California, most of the borrowers are from
+that state.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##     0.0   157.3   251.9   291.9   388.4  2251.5
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Mode:  173.71"
+\end{verbatim}
+
+Some people pay more than \$2,000 a month, but the median monthly pay is
+only \$251.9, and there is a high peak between \$150 and \$200. This
+distribution has a long right tail.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   0.000   0.150   0.220   0.259   0.320  10.010    7296
+\end{verbatim}
+
+The DebtToIncomeRatio is maximized at 10.01. The median is 0.259, and
+the third quartile is 0.320, so only a few people have DebtToIncomeRatio
+larger than 1.0. With a log10 transformation, we have a nice bell shape.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##       0    3434    5000    5931    7083 1750003
+\end{verbatim}
+
+The median StatedMonthlyIncome is exactly \$5000. This is the income
+stated by the borrower. Most likely these states are only estimates.
+Half of the people have StatedMonthlyIncome between \$3,434 and \$7,083.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+The loans with the largest median are for debt consolidation, baby \&
+adoption, wedding, and business. Student loans are the smallest ones.
+
+\section{Univariate Analysis}\label{univariate-analysis}
+
+\subsubsection{What is the structure of your
+dataset?}\label{what-is-the-structure-of-your-dataset}
+
+The original dataset has 81 variables and 113937 observations. Because
+this dataset was very large and difficult to traverse a subset was used,
+where 20 variables were retained. The loans before 2009-07-13 were
+dropped because of a lot of missing data.
+
+\subsubsection{What is/are the main feature(s) of interest in your
+dataset?}\label{what-isare-the-main-features-of-interest-in-your-dataset}
+
+My main interest is to find the characteristics of ``bad'' loans. I
+simplified the LoanStatus variable. There were too many similar levels.
+They are regrouped to the following 4 groups: ``Completed'',
+``Current'', ``Failed'', ``Past''.
+
+\subsubsection{\texorpdfstring{What other features in the dataset do you
+think will help support your\\
+investigation into your feature(s) of
+interest?}{What other features in the dataset do you think will help support your investigation into your feature(s) of interest?}}\label{what-other-features-in-the-dataset-do-you-think-will-help-support-your-investigation-into-your-features-of-interest}
+
+\begin{verbatim}
+            Term,
+            BorrowerRate,
+            EstimatedReturn,
+            ProsperRating,
+            ProsperScore,
+            ListingCategory,
+            BorrowerState,
+            DebtToIncomeRatio,
+            IncomeRange,
+            StatedMonthlyIncome,
+            LoanOriginalAmount,
+            LoanOriginationDate,
+            MonthlyLoanPayment
+\end{verbatim}
+
+\subsubsection{Did you create any new variables from existing variables
+in the
+dataset?}\label{did-you-create-any-new-variables-from-existing-variables-in-the-dataset}
+
+I regrouped, refactored the LoanStatus with new levels.
+
+\subsubsection{\texorpdfstring{Of the features you investigated, were
+there any unusual distributions?\\
+Did you perform any operations on the data to tidy, adjust, or change
+the form\\
+of the data? If so, why did you do
+this?}{Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?}}\label{of-the-features-you-investigated-were-there-any-unusual-distributions-did-you-perform-any-operations-on-the-data-to-tidy-adjust-or-change-the-form-of-the-data-if-so-why-did-you-do-this}
+
+A large portion of the loans are round numbers, very popular amounts
+are: \$400, \$10,000, \$15,000. Far the most popular cause of borrowing
+loan is debt consolidation. At the and of 2012 the number of new loans
+dropped for some months. In some rear cases, the Estimated return can be
+negative. The service is most popular in California. The is a high peak
+in the MonthlyLoanPayment distribution between \$150 and \$200.
+DebToIncome ratio above 1.0 is rare. With a log10 transformation, we get
+a nice bell-shaped distribution. StatedMonthlyIncome with log10
+transformation results in a bell shape as well. For debt consolidation
+or baby \& adoption the median loans are relatively high, but for
+student use small.
+
+\section{Bivariate Plots Section}\label{bivariate-plots-section}
+
+\includegraphics{projecttemplate_files/figure-latex/Bivariate_Plots-1.pdf}
+
+The distribution of LoanOriginalAmount in case of failed and completed
+loans doesn't show a salient difference, but the proportion of current
+loans larger than \$10,000 is relatively large.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-16-1.pdf}
+
+The distribution of BorrowerRate in case of completed loans can be
+considered uniform, current loans are right-skewed. But failed and past
+due loans are left-skewed. Probably higher BorrotRates are assigned to
+more risky borrowers.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+Higher ProsperRating is better. This shows how risky the borrower is.
+This distributions are similar to the distributions of Borrowerate, but
+mirrored. Failed loans have a large proportion of bad ProsperRatings.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-18-1.pdf}
+
+From the earlier distribution we could anticipate some negative
+correlation between ProsperRating and BorrowerRate. Here we can clearly
+see that the largest the ProsperRating the smallest the BorrowerRate.
+
+\begin{verbatim}
+## Warning: `geom_bar()` no longer has a `binwidth` parameter. Please use
+## `geom_histogram()` instead.
+\end{verbatim}
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+This plot shows the count of LoanStatus levels during the period. The
+oldest Current loans were opened in the first half of 2011.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+In the above plot, the current loans are omitted. Past Due loans can be
+completed later, and later can become Current, but I wanted to see the
+``problematic'' loans, so I only omitted the Current loans. Very
+interesting that the Green Loans perform so badly. Medical/Dental loans
+have a large portion of Past Due or Failed loans as well. But students
+are really reliable.
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+Current loans are omitted here as well. This plot shows, what most of us
+would anticipate, employed borrowers, perform better, not employed and
+other groups perform worst.
+
+\section{Bivariate Analysis}\label{bivariate-analysis}
+
+\subsubsection{\texorpdfstring{Talk about some of the relationships you
+observed in this part of the\\
+investigation. How did the feature(s) of interest vary with other
+features in\\
+the
+dataset?}{Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?}}\label{talk-about-some-of-the-relationships-you-observed-in-this-part-of-the-investigation.-how-did-the-features-of-interest-vary-with-other-features-in-the-dataset}
+
+Loans with lower ProsperRating are more probable to fail. It is
+interesting that Green Loans has so large proportion of Failed or Past
+Due loans, and Student Use performs so well. And as we would anticipate
+employed people are better at paying back loans.
+
+\subsubsection{\texorpdfstring{Did you observe any interesting
+relationships between the other features\\
+(not the main feature(s) of
+interest)?}{Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?}}\label{did-you-observe-any-interesting-relationships-between-the-other-features-not-the-main-features-of-interest}
+
+ProsperRating and BorrowerRate have a strong negative linear
+association, the lower the ProsperRating the higher the BorrowerRate.
+
+\subsubsection{What was the strongest relationship you
+found?}\label{what-was-the-strongest-relationship-you-found}
+
+ProsperRating vs BorrowerRate
+
+\section{Multivariate Plots Section}\label{multivariate-plots-section}
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+\end{verbatim}
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+LoanOriginalAmount tends to be higher with StatedMonthlyIncome. With the
+same LoanOriginalAmount to the Completed loans belongs higher mean
+StatedMonthlyIncome than to the Failed loans, regardless of the loan
+size.
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+\end{verbatim}
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+As the LoanOriginalAmount tends to be higher the DebtToIncomeRate tends
+to be higher as well in most cases, but there are some exceptions. In
+the case of Current loans the mean DebtToIncomeRate decreases with the
+largest LoanOriginalAmounts. In the Failed plot in the case of the best
+ProsperRatings (6,7) the DebtToIncomeRate tends to decrease when the
+LoanOriginalAmounts increases. To better ProsperRating belongs lower
+DebtToIncomeRating.
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+\end{verbatim}
+
+\includegraphics{projecttemplate_files/figure-latex/unnamed-chunk-24-1.pdf}
+
+LoanOriginalAmount and MonthlyLoanPayment have a strong linear
+relationship and the steepness of this relationship is determined by the
+Term length.
+
+\section{Multivariate Analysis}\label{multivariate-analysis}
+
+\subsubsection{\texorpdfstring{Talk about some of the relationships you
+observed in this part of the\\
+investigation. Were there features that strengthened each other in terms
+of\\
+looking at your feature(s) of
+interest?}{Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?}}\label{talk-about-some-of-the-relationships-you-observed-in-this-part-of-the-investigation.-were-there-features-that-strengthened-each-other-in-terms-of-looking-at-your-features-of-interest}
+
+LoanOriginalAmount tends to be higher with StatedMonthlyIncome. With the
+same LoanOriginalAmount to the Completed loans belongs higher mean
+StatedMonthlyIncome than to the Failed loans, regardless of the loan
+size.
+
+As the DebtToIncomeRatio tends to be higher the ProsperRating tends to
+be worse (lower).
+
+LoanOriginalAmount and MonthlyLoanPayment have a strong linear
+relationship and the steepness of this relationship is determined by the
+Term length.
+
+\subsubsection{Were there any interesting or surprising interactions
+between
+features?}\label{were-there-any-interesting-or-surprising-interactions-between-features}
+
+In the case of Failed loans the association between LoanOriginalAmount
+and DebtToIncomeRatio is strange. With most ProsperRatings as the
+LoanOriginalAmount tends to increase the DebtToIncomeRatio tends to
+increase as well. In the case of the best ProsperRating the association
+seems to be the opposite.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Final Plots and Summary}\label{final-plots-and-summary}
+
+\subsubsection{Plot One}\label{plot-one}
+
+\includegraphics{projecttemplate_files/figure-latex/Plot_One-1.pdf}
+
+\subsubsection{Description One}\label{description-one}
+
+In this plot, we can see why the borrowers apply for a loan and how much
+amount they borrow for different purposes. Besides the median, we can
+see the mean as well (+ sign). The highest median and average amount
+belong to Debt Consolidation, Baby\&Adoption, Business, and Wedding. The
+smallest amounts are borrowed for Student Use.
+
+\subsubsection{Plot Two}\label{plot-two}
+
+\includegraphics{projecttemplate_files/figure-latex/Plot_Two-1.pdf}
+
+\subsubsection{Description Two}\label{description-two}
+
+In this plot, we can see that the ProspeRating score works, because in
+the Failed level most loans belong to the worst ProsperRatings.
+
+\subsubsection{Plot Three}\label{plot-three}
+
+\includegraphics{projecttemplate_files/figure-latex/Plot_Three-1.pdf}
+
+\subsubsection{Description Three}\label{description-three}
+
+There isn't any surprise in this plot. The largest proportion of Failed
+loans belong to the Not Employed and Other group. Full-time and
+Part-time employees are the most reliable.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Reflection}\label{reflection}
+
+Without deep domain knowledge, this was a difficult task to analyze the
+prosper dataset. It is hard to use 81 features. It was even a
+considerable time to filter the variables to analyze. During this
+process, I googled a lot of features to understand them.
+
+I chose this dataset, because I thought it to be a challenging one, and
+in that I was right. First I wanted only to choose the most interesting
+variables, but without concept, there were too many interesting
+combinations. It was easier to narrow the features when I decided that I
+want to focus on the ``Failed'' loans.
+
+Finally, 20 features remained, but the combination with this number of
+features is really large as well.
+
+This EDA was super for learning purpose. Before the course, I didn't use
+R, and here I learned a lot about ggplot. Sometimes a struggled with the
+plots because they didn't want become the charts I wanted, but finally
+we agreed.
+
+There are a large number of ways to take this project further, but a
+good next step could be a logistic regression with failed and finished
+loans.
+
+
+\end{document}
