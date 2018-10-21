@@ -1,7 +1,7 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 Prosper Loan Data Exploratory Data Analysis by Véber István
 ========================================================
@@ -16,7 +16,8 @@ matched borrowers and investors."
 In the original dataset there are 81 variables, during the analysis the
 following variables were retained:
 source:
-https://rstudio-pubs-static.s3.amazonaws.com/86324_ab1e2e2fa210452f80a1c6a1476d7a2a.html
+https://rstudio-pubs-static.s3.amazonaws.com
+/86324_ab1e2e2fa210452f80a1c6a1476d7a2a.html
 
 Term:	The length of the loan expressed in months.
 LoanStatus:	The current status of the loan: Cancelled, Chargedoff, Completed, 
@@ -95,26 +96,36 @@ df = select(df_full,
                 LoanOriginationQuarter,
                 MonthlyLoanPayment
 )
+
+# rename long names
 names(df)[names(df)=="ProsperRating..numeric."] <- "ProsperRating"
 names(df)[names(df)=="ListingCategory..numeric."] <- "ListingCategory"
+
+# check size
 dim(df)
 ```
 ```{r echo=FALSE}
 # ListingCategory is numeric in the dataset, convert to strings
 df$ListingCategory <- factor(df$ListingCategory,
-                                labels = c("Not Available","Debt Consolidation","Home Improvement","Business",
-                                           "Personal Loan","Student Use","Auto","Other","Baby&Adoption","Boat",
-                                           "Cosmetic Procedures","Engagement Ring","Green Loans","Household Expenses",
-                                           "Large Purchases","Medical/Dental","Motorcycle","RV","Taxes","Vacation","Wedding Loans"))
+  labels = c("Not Available","Debt Consolidation","Home Improvement","Business",
+            "Personal Loan","Student Use","Auto","Other","Baby&Adoption","Boat",
+            "Cosmetic Procedures","Engagement Ring","Green Loans",
+            "Household Expenses","Large Purchases","Medical/Dental",
+            "Motorcycle","RV","Taxes","Vacation","Wedding Loans"))
 
 # make scores and ratings oredered
-df$ProsperRating <- factor(df$ProsperRating, levels = c("NA", "1", "2", "3", "4", "5", "6", "7"), ordered = TRUE)
-df$ProsperScore <- factor(df$ProsperScore, levels = c("NA", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"), ordered = TRUE)
+df$ProsperRating <- factor(df$ProsperRating, 
+                           levels = c("NA", "1", "2", "3", "4", "5", "6", "7"), 
+                           ordered = TRUE)
+df$ProsperScore <- factor(df$ProsperScore, 
+                          levels = c("NA", "1", "2", "3", "4", "5", "6", "7", 
+                                     "8", "9", "10", "11"), ordered = TRUE)
 
 # convert to date
 df$LoanOriginationDate <- as.Date(df$LoanOriginationDate)
 df$ListingCreationDate <- as.Date(df$ListingCreationDate)
 
+# term is a number, but there is only 3, factor is better
 df$Term <- factor(df$Term)
 
 str(df)
@@ -128,7 +139,10 @@ apply(is.na(df), 2, sum)
 ```
 
 ```{r echo=FALSE}
-ggplot(aes(x = ListingCreationDate, y = ProsperRating), data = df) + geom_line()
+# visualise missing values
+ggplot(aes(x = ListingCreationDate, y = ProsperRating), data = df) + 
+  geom_line() +
+  ggtitle("Visualizing missing data")
 ```
 
 Some variables have no data prior 2009-07-13, these dates were dropped.
@@ -145,6 +159,7 @@ and this alone can be an interesting group to examine, so these rows are
 retained.
 
 ```{r}
+# narrow number of factors for better interpretability
 df$LoanStatus <- as.character(df$LoanStatu)
 df$LoanStatus[df$LoanStatus == 'Defaulted'] <- 'Failed'
 df$LoanStatus[df$LoanStatus == 'Chargedoff'] <- 'Failed'
@@ -166,10 +181,13 @@ the following 4 groups: "Completed", "Current", "Failed", "Past"
 # Univariate Plots Section
 
 ```{r echo=FALSE, Univariate_Plots}
+# histograms of LoanOriginalAmount - $100 and $2000 width
 plot1 <-  ggplot(aes(x = LoanOriginalAmount), data = df) + 
-          geom_histogram(binwidth = 100)
+          geom_histogram(binwidth = 100) +
+          ggtitle("Loan count with $100 bins")
 plot2 <-  ggplot(aes(x = LoanOriginalAmount), data = df) + 
-          geom_histogram(binwidth = 2000)
+          geom_histogram(binwidth = 2000) +
+          ggtitle("Loan count with $2000 bins")
 grid.arrange(plot1, plot2, ncol=2)
 summary(df$LoanOriginalAmount)
 ```
@@ -182,32 +200,78 @@ A large proportion of the loans are under $15,000. Some round numbers are very
 popular: $400, $10,000, $15,000, the median loan is $7,500.
 
 ```{r echo=FALSE}
+# examine the ListingCategory
 ggplot(df, aes(x=ListingCategory, (y=..count../sum(..count..)))) + 
   geom_bar() + 
+  ggtitle("Proportion of loans by purpose of the loan") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 summary(df$ListingCategory)
 ```
 
-The most popular choice is debt consolidation by far, other popular reasons are home improvement, business, and auto.
+The most popular choice is debt consolidation by far, other popular reasons are 
+home improvement, business, and auto.
 
 ```{r echo=FALSE}
+# examine the EmploymentStatus
+ggplot(df, aes(x=EmploymentStatus, (y=..count../sum(..count..)))) + 
+  geom_bar() + 
+  ggtitle("Proportion of loans by EmploymentStatus") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+summary(df$EmploymentStatus)
+```
+
+Most of the loans are borrowed by employed people. Not employed, part-time or 
+retired people borrow rarely.
+
+```{r echo=FALSE}
+# examine the Term
+ggplot(df, aes(x=Term, (y=..count../sum(..count..)))) + 
+  geom_bar() + 
+  ggtitle("Proportion of loans by Term") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+summary(df$Term)
+```
+
+The most popular term is 36 months.
+
+```{r echo=FALSE}
+# examine the ProsperRating
+ggplot(df, aes(x=ProsperRating, (y=..count../sum(..count..)))) + 
+  geom_bar() + 
+  ggtitle("Proportion of borrowers by ProspeRating") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+summary(df$ProsperRating)
+```
+The bulk of the borrowers are between 3 and 6 ProsperRating.
+
+
+```{r echo=FALSE}
+# daily, 7 days, and 30 days period new loans with histogram
 ggplot(aes(x = LoanOriginationDate), data = df) + 
           geom_histogram(binwidth = 30) +
           geom_histogram(binwidth = 7, color="CadetBlue") +
-          geom_histogram(binwidth = 1, color="coral")
+          geom_histogram(binwidth = 1, color="coral") +
+          ggtitle("30 days, 7 days and daily number of new loans")
 summary(df$LoanOriginationDate)
 ```
 
 During the period the number of new loans is growing, but at the and of 2012 
 was a fallback, and only in the middle of 2013 reached the number of new loans 
-the earlier record. In the chart, the grey columns are the number of new loans in
-a 30 days period. The blue columns are the new loans per week, and the orange 
+the earlier record. In the chart, the grey columns are the number of new loans 
+in a 30 days period. The blue columns are the new loans per week, and the orange 
 the loans per day.  
 
 ```{r echo=FALSE}
-plot1 <- ggplot(df, aes(x=LoanStatus, y=..count../sum(..count..))) + geom_bar() + 
+# examine LoanStatus - second plot shows completed vs failed
+plot1 <- ggplot(df, aes(x=LoanStatus, y=..count../sum(..count..))) + 
+  geom_bar() + 
+  ggtitle("Proportion of LoanStatus") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-plot2 <- ggplot(subset(df, df$LoanStatus == "Completed" | df$LoanStatus == "Failed"), aes(x=LoanStatus, y=..count../sum(..count..))) + geom_bar() + 
+plot2 <- ggplot(subset(df, 
+                      df$LoanStatus == "Completed" | df$LoanStatus == "Failed"), 
+                aes(x=LoanStatus, y=..count../sum(..count..))) + 
+  geom_bar() + 
+  ggtitle("Completed vs Failed loans") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 grid.arrange(plot1, plot2, ncol=2)
 ```
@@ -218,11 +282,15 @@ on the completed or failed loans we can see that a quarter of the loans failed
 (defaulted or charged-off).
 
 ```{r echo=FALSE, warning=FALSE}
+# compare histogram of BorrowerRate and EstimatedReturn
 ggplot(df) + 
-  geom_histogram(aes(x = BorrowerRate, color = "BorrowerRate"), alpha=0.6,binwidth=0.01,position="dodge", size=1) +
-                      scale_x_continuous(breaks=seq(-0.1,0.35,0.1), limits=c(-0.1,0.35)) +
-  geom_histogram(aes(x = EstimatedReturn, color = "EstimatedReturn"), alpha=0.6,binwidth=0.01,position="dodge", size=1) + 
-  xlab("BorrowerRate or EstimatedReturn")
+  geom_histogram(aes(x = BorrowerRate, color = "BorrowerRate"), 
+                 alpha=0.6,binwidth=0.01,position="dodge", size=1) +
+  scale_x_continuous(breaks=seq(-0.1,0.35,0.1), limits=c(-0.1,0.35)) +
+  geom_histogram(aes(x = EstimatedReturn, color = "EstimatedReturn"), 
+                 alpha=0.6,binwidth=0.01,position="dodge", size=1) + 
+  xlab("BorrowerRate or EstimatedReturn") +
+  ggtitle("Histogram of BorrowerRate and EstimatedReturn")
 summary(df$BorrowerRate)
 summary(df$EstimatedReturn)
 ```
@@ -233,8 +301,10 @@ BorrowerRate is a bit bimodal. The range of BorrowerRate is larger.
 EstimatedReturn some cases can be negative.
 
 ```{r echo=FALSE}
+# loans by state
 ggplot(df, aes(x=BorrowerState)) + 
   geom_bar() + 
+  ggtitle("Loans by state") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
@@ -242,13 +312,18 @@ Prosper is really popular in California, most of the borrowers are from that
 state.
 
 ```{r echo=FALSE}
+# MonthlyLoanPayment distribution
 ggplot(df) + 
-  geom_area(aes(x = MonthlyLoanPayment), binwidth=10, stat = "bin", color = "black", fill = "CadetBlue") +
+  geom_area(aes(x = MonthlyLoanPayment), 
+            binwidth=10, stat = "bin", color = "black", fill = "CadetBlue") +
+  ggtitle("Monthly loan payment distribution") +
   scale_x_continuous(breaks=seq(0,2200,100)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 summary(df$MonthlyLoanPayment)
 
-# source: https://stackoverflow.com/questions/2547402/is-there-a-built-in-function-for-finding-the-mode
+# source: https://stackoverflow.com/questions/2547402
+#        /is-there-a-built-in-function-for-finding-the-mode
+# mode function
 Mode <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
@@ -262,8 +337,11 @@ $251.9, and there is a high peak between $150 and $200. This distribution has a
 long right tail.
 
 ```{r echo=FALSE, warning=FALSE}
+# DebtToIncomeRatio distribution with log10 transformation
 ggplot(df) + 
-  geom_area(aes(x = DebtToIncomeRatio), binwidth=0.05, stat = "bin", color = "black", fill = "CadetBlue") +
+  geom_area(aes(x = DebtToIncomeRatio), 
+            binwidth=0.05, stat = "bin", color = "black", fill = "CadetBlue") +
+  ggtitle("DebtToIncomeRatio distribution with log10 transformation") +
   scale_x_log10() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 summary(df$DebtToIncomeRatio)
@@ -274,8 +352,11 @@ quartile is 0.320, so only a few people have DebtToIncomeRatio larger than 1.0.
 With a log10 transformation, we have a nice bell shape.
 
 ```{r echo=FALSE, warning=FALSE}
+# StatedMonthlyIncome distribution with log10 transformation
 ggplot(df) + 
-  geom_area(aes(x = StatedMonthlyIncome), binwidth=0.02, stat = "bin", color = "black", fill = "CadetBlue") +
+  geom_area(aes(x = StatedMonthlyIncome), 
+            binwidth=0.02, stat = "bin", color = "black", fill = "CadetBlue") +
+  ggtitle("StatedMonthlyIncome distribution with log10 transformation") +
   scale_x_log10() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   coord_cartesian(xlim=c(100, 100000))
@@ -285,15 +366,6 @@ summary(df$StatedMonthlyIncome)
 The median StatedMonthlyIncome is exactly $5000. This is the income stated by 
 the borrower. Most likely these states are only estimates. Half of the people 
 have StatedMonthlyIncome between $3,434 and $7,083.
-
-```{r echo=FALSE}
-ggplot(df, aes(x=ListingCategory, y=LoanOriginalAmount)) + 
-  geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-The loans with the largest median are for debt consolidation, baby & adoption, 
-wedding, and business. Student loans are the smallest ones.
 
 
 # Univariate Analysis
@@ -339,6 +411,7 @@ of the data? If so, why did you do this?
 A large portion of the loans are round numbers, very popular amounts are: $400, 
 $10,000, $15,000.
 Far the most popular cause of borrowing loan is debt consolidation.
+Most of the loans are borrowed by employed people.
 At the and of 2012 the number of new loans dropped for some months.
 In some rear cases, the Estimated return can be negative.
 The service is most popular in California.
@@ -346,14 +419,22 @@ The is a high peak in the MonthlyLoanPayment distribution between $150 and $200.
 DebToIncome ratio above 1.0 is rare. With a log10 transformation, we get a nice 
 bell-shaped distribution. StatedMonthlyIncome with log10 transformation results 
 in a bell shape as well.
-For debt consolidation or baby & adoption the median loans are relatively high, 
-but for student use small.
-
 
 
 # Bivariate Plots Section
 
+```{r echo=FALSE}
+# boxplot of LoanOriginalAmount by ListingCategory
+ggplot(df, aes(x=ListingCategory, y=LoanOriginalAmount)) + 
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+The loans with the largest median are for debt consolidation, baby & adoption, 
+wedding, and business. Student loans are the smallest ones.
+
 ```{r echo=FALSE, Bivariate_Plots}
+# histogram of LoanOriginalAmount by LoanStatus with log10 transformation
 ggplot(df, aes(x=LoanOriginalAmount)) + 
   geom_histogram(binwidth = 0.1) + 
   scale_x_log10() +
@@ -366,6 +447,7 @@ doesn't show a salient difference, but the proportion of current loans larger
 than $10,000 is relatively large.
 
 ```{r echo=FALSE}
+# histogram of BorrowerRate by LoanStatus
 ggplot(df, aes(x=BorrowerRate)) + 
   geom_histogram(binwidth = 0.02) + 
   facet_wrap(~LoanStatus, scales="free")
@@ -376,6 +458,7 @@ uniform, current loans are right-skewed. But failed and past due loans are
 left-skewed. Probably higher BorrotRates are assigned to more risky borrowers.
 
 ```{r echo=FALSE}
+# ProsperRating by LoanStatus
 ggplot(df) + 
   geom_bar(aes(x=ProsperRating)) + 
   facet_wrap(~LoanStatus, scales="free")
@@ -386,6 +469,7 @@ distributions are similar to the distributions of Borrowerate, but mirrored.
 Failed loans have a large proportion of bad ProsperRatings.
 
 ```{r echo=FALSE}
+# scatterplot of ProsperRating and BorrowerRate
 ggplot(df, aes(x = ProsperRating, y = BorrowerRate)) +
   geom_point(alpha= 0.2, position = position_jitter(h=0))
 ```
@@ -395,6 +479,7 @@ between ProsperRating and BorrowerRate. Here we can clearly see that the largest
 the ProsperRating the smallest the BorrowerRate.
 
 ```{r echo=FALSE}
+# 30 day loans by LoanStatus
 ggplot(df, aes(x = LoanOriginationDate, fill = LoanStatus)) +
   geom_bar(stat = "bin", binwidth=30, color = "grey40")
 ```
@@ -404,6 +489,8 @@ Current loans were opened in the first half of 2011.
 
 ```{r echo=FALSE}
 # proportional stacked bars code source: https://afit-r.github.io/barcharts
+
+# proportion of LoanStatus levels without Current by ListingCategory
 # calculate percentages
 proportion <- subset(df, df$LoanStatus != "Current") %>%
         group_by(ListingCategory, LoanStatus) %>%
@@ -424,6 +511,7 @@ the Green Loans perform so badly. Medical/Dental loans have a large portion of
 Past Due or Failed loans as well. But students are really reliable.
 
 ```{r echo=FALSE}
+# proportion of LoanStatus levels without Current by EmploymentStatus
 # calculate percentages
 proportion <- subset(df, df$LoanStatus != "Current") %>%
         group_by(EmploymentStatus, LoanStatus) %>%
@@ -460,6 +548,9 @@ paying back loans.
 ProsperRating and BorrowerRate have a strong negative linear association, the 
 lower the ProsperRating the higher the BorrowerRate.
 
+For debt consolidation or baby & adoption the median loans are relatively high, 
+but for student use small.
+
 ### What was the strongest relationship you found?
 
 ProsperRating vs BorrowerRate
@@ -468,7 +559,10 @@ ProsperRating vs BorrowerRate
 # Multivariate Plots Section
 
 ```{r echo=FALSE, warning=FALSE}
-ggplot(subset(df, df$LoanStatus != "Current"), aes(LoanOriginalAmount, StatedMonthlyIncome, colour = LoanStatus)) +
+# scatterplot of LoanOriginalAmount and StatedMonthlyIncome 
+# colored by LoanStatus
+ggplot(subset(df, df$LoanStatus != "Current"), 
+       aes(LoanOriginalAmount, StatedMonthlyIncome, colour = LoanStatus)) +
   geom_point(alpha= 0.4, position = position_jitter()) +
   scale_y_log10() + 
   scale_x_log10() + 
@@ -477,10 +571,13 @@ ggplot(subset(df, df$LoanStatus != "Current"), aes(LoanOriginalAmount, StatedMon
   scale_color_brewer(type='qual', palette = "Set1")
 ```
 
-LoanOriginalAmount tends to be higher with StatedMonthlyIncome. With the same LoanOriginalAmount to the Completed loans belongs higher mean 
+LoanOriginalAmount tends to be higher with StatedMonthlyIncome. With the same 
+LoanOriginalAmount to the Completed loans belongs higher mean 
 StatedMonthlyIncome than to the Failed loans, regardless of the loan size.
 
 ```{r echo=FALSE, warning=FALSE}
+# scatterplots of LoanOriginalAmount and DebtToIncomeRatio, 
+# colored by ProsperRating, grouped by LoanStatus
 ggplot(df, aes(LoanOriginalAmount, DebtToIncomeRatio, colour = ProsperRating)) +
   geom_point(alpha= 0.3, size=1, position = position_jitter()) +
   geom_smooth(size=1, alpha=1, level=0) +
@@ -500,6 +597,8 @@ LoanOriginalAmounts. In the Failed plot in the case of the best ProsperRatings
 increases. To better ProsperRating belongs lower DebtToIncomeRating.
 
 ```{r echo=FALSE}
+# scatterplot of LoanOriginalAmount and MonthlyLoanPayment,
+# colored by Term
 ggplot(df, aes(LoanOriginalAmount, MonthlyLoanPayment, colour = Term)) +
   geom_point(alpha= 0.2, position = position_jitter(h=0)) +
   geom_smooth(size=1, alpha=1, level=0)
@@ -538,14 +637,16 @@ of the best ProsperRating the association seems to be the opposite.
 
 ### Plot One
 ```{r echo=FALSE, Plot_One}
+# boxplot of LoanOriginalAmount by ListingCategory
 ggplot(df, aes(x=ListingCategory, y=LoanOriginalAmount)) + 
-  geom_boxplot(aes(fill = ListingCategory)) +
+  geom_boxplot(fill="#eddfc7") +
   stat_summary(fun.y = mean, geom = "point", shape = 3, size = 3) +
   theme_minimal() +
   guides(fill=FALSE) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ggtitle("Boxplot of the loan amounts by purpose of the loan") +
-  theme(plot.title = element_text(size = 18, face = "bold"), axis.title = element_text(face="bold")) +
+  theme(plot.title = element_text(size = 18, face = "bold"), 
+        axis.title = element_text(face="bold")) +
   xlab("Purpose of the loan") + 
   ylab("Loan Amount") +
   coord_cartesian(ylim = c(0,20000))
@@ -560,23 +661,27 @@ borrowed for Student Use.
 
 ### Plot Two
 ```{r echo=FALSE, Plot_Two}
+# ProsperRating by LoanStatus
 ggplot(df, aes(x=ProsperRating, fill = ProsperRating)) + 
         geom_bar(color = "grey40") + 
         scale_fill_brewer(palette="OrRd") +
         facet_wrap(~LoanStatus, scales="free") +
         theme_minimal() +
         ggtitle("Number of loans by prosper rating in loan status groups") +
-        theme(plot.title = element_text(size = 14, face = "bold"), axis.title = element_text(face="bold")) +
+        theme(plot.title = element_text(size = 14, face = "bold"), 
+              axis.title = element_text(face="bold")) +
         xlab("Prosper Rating") + 
         ylab("count")
 ```
 
 ### Description Two
-In this plot, we can see that the ProspeRating score works, because in the Failed 
-level most loans belong to the worst ProsperRatings. 
+In this plot, we can see that the ProspeRating score works, because in 
+the Failed level most loans belong to the worst ProsperRatings. 
 
 ### Plot Three
 ```{r echo=FALSE, Plot_Three}
+# proportion of LoanStatus levels without Current by EmploymentStatus
+# calculate percentages
 # calculate percentages
 proportion <- subset(df, df$LoanStatus != "Current") %>%
         group_by(EmploymentStatus, LoanStatus) %>%
@@ -591,7 +696,8 @@ ggplot(proportion, aes(EmploymentStatus, pct, fill = LoanStatus)) +
         theme_minimal() +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
         ggtitle("The percentage of good and bad loans without current loans") +
-        theme(plot.title = element_text(size = 14, face = "bold"), axis.title = element_text(face="bold")) +
+        theme(plot.title = element_text(size = 14, face = "bold"), 
+              axis.title = element_text(face="bold")) +
         xlab("Employment Status") + 
         ylab("percentage") +
         scale_fill_manual(values=c("#eddfc7", "#dac7ed", "#c7d4ed"))
