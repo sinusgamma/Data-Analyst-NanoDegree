@@ -12,12 +12,17 @@ Compare the bikeshare system usage between three large cities: New York City, Ch
 P3: Investigate a Dataset:<br>
 Assessing, cleaning and exploring dataset. Examine global deforestation and find demographic or economic connections.
 
-P4: Analyze A/B test results: Understand the results of an A/B test run by an e-commerce website.
+P4: Analyze A/B test results:<br>
+Understand the results of an A/B test run by an e-commerce website.
 
-P5: Perceptual Phenomenon: Investigation of a classic phenomenon from experimental psychology called the Stroop Effect.
+P5: Perceptual Phenomenon:<br> 
+Investigation of a classic phenomenon from experimental psychology called the Stroop Effect.
 
-P6: Prosper Loan Data Exploratory Data Analysis with R. Univariate, bivariate and multivariate analysis.
+P6: Prosper Loan Data Exploratory Data Analysis with R:<br> Univariate, bivariate and multivariate analysis.
 
 P7: Gather data from WeRateDogs Twitter archive, clean and explore it.
 
-P8: Tableau Story: In this Tableau story, I explored the arrival delays at the airports of the United States. The story shows some aspects of these delays, the connection between delays and airport traffic, airline and month of the year.
+P8: Tableau Story:<br> 
+In this Tableau story, I explored the arrival delays at the airports of the United States. The story shows some aspects of these delays, the connection between delays and airport traffic, airline and month of the year.
+
+![alt text](https://github.com/sinusgamma/Data-Analyst-NanoDegree/blob/master/nd.JPG)
